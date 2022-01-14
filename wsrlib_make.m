@@ -13,7 +13,7 @@ root = wsrlib_root();
 %%%%%%%%%%%%%%%%%%%%%% 
 fprintf('********** Compiling rsl ************\n\n');
 
-status = system(sprintf('make -C %s/rsl2mat/rsl', root), '-echo');
+status = system(sprintf('CC=/usr/local/bin/gcc-11 CXX=/usr/local/bin/g++-11 make -C %s/rsl2mat/rsl', root), '-echo');
 if status ~= 0
     error('Failed to compile rsl');
 end
