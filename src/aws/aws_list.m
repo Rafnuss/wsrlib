@@ -15,7 +15,7 @@ if nargin >= 5
 end
 
 
-cmd = sprintf('aws s3api list-objects --bucket noaa-nexrad-level2 --prefix %s --query ''Contents[].{Key: Key, Size: Size}'' --output json', s3path);
+cmd = sprintf('/usr/local/bin/aws s3api list-objects --bucket noaa-nexrad-level2 --prefix %s --query ''Contents[].{Key: Key, Size: Size}'' --output json --no-sign-request', s3path);
 
 [status, result] = system( cmd );
 if status
