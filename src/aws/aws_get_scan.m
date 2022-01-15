@@ -13,7 +13,7 @@ function [local_file, info] = aws_get_scan(key, dataroot, background, verbose)
 %                  KABX20170902_041920 or KABX20170902_041920_V06
 %
 %    dataroot      Scan will be stored within this root directory following
-%                  the same directory structure as the s3 bucket, i.e., 
+%                  the same directory structure as the s3 bucket, i.e.,
 %                  <year>/<month>/<day>/<station>/<scan>
 %
 %    background    If true, intiate download and return immediately
@@ -42,7 +42,7 @@ end
 info = aws_parse(name);
 
 % If the scan exists locally, return path to it.
-% TODO: this can return a false positive 
+% TODO: this can return a false positive
 f = dir(sprintf('%s/%s/%s*', dataroot, aws_path, name));
 pattern = sprintf('^%s(_V\\d\\d)?(.gz)?$', name);
 for i=1:length(f)

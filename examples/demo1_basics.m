@@ -1,6 +1,6 @@
 %% 0. Help
 
-help wsrlib 
+help wsrlib
 doc wsrlib
 
 %% 1. Read radar file
@@ -110,7 +110,7 @@ range_lim = [20000 22000];
 
 figure(2); clf();
 for i=1:length(fields)
-
+    
     field = fields{i};
     [data, range, az] = sweep2mat(radar.(field).sweeps(1));
     

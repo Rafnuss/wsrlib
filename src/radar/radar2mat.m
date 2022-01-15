@@ -13,7 +13,7 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 %
 % Named inputs
 %   coords       'polar' | 'cartesian' (default: 'polar')
-%   r_min        min radius for polar data in meters (default: 2125) 
+%   r_min        min radius for polar data in meters (default: 2125)
 %   r_res        range resolution (default: 250m)
 %   az_res       azimuth resolution (default: 0.5)
 %   dim          pixel dimension for Cartesian data (default: 500)
@@ -22,14 +22,14 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 %                number, using nearest-neighbor interpolation to match to
 %                the desired elevations
 %   output_format  cell | struct
-%   ydirection   'xy' | 'ij'. This specifies whether the y coordinates 
-%                of pixels are decreasing ('ij') or increasing ('xy') 
+%   ydirection   'xy' | 'ij'. This specifies whether the y coordinates
+%                of pixels are decreasing ('ij') or increasing ('xy')
 %                along the first dimension of the array. The default
 %                is 'xy', which makes the output compatible with
 %                griddedInterpolant.
 %   interp_method: Interpolation method for use within radarInterpolant.
 %                Default is 'nearest'.
-%   max_interp_dist: Tolerance in degrees for matching requested elevation 
+%   max_interp_dist: Tolerance in degrees for matching requested elevation
 %                angles (defualt: 1.0)
 %
 % Outputs:
@@ -40,9 +40,9 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 %
 % For polar coordinates the dimension order is range, az, elev
 %
-% For Cartesian data, the dimension order is y, x, z, with the y dimension 
+% For Cartesian data, the dimension order is y, x, z, with the y dimension
 % stored in "gridded data" format as opposed to "image format". That is,
-% the first row has the smallest y coordinate. This makes it compatible 
+% the first row has the smallest y coordinate. This makes it compatible
 % with griddedInterpolant but an extra step is required to view it as an
 % image in the correct orientation. For plotting within MATLAB, use "axis
 % xy" to set the axes to the correct orientation. For saving as an image,
@@ -93,7 +93,7 @@ params = p.Results;
 % Get list of requested fields
 get_available_fields = strcmp(params.fields, 'all');
 if get_available_fields
-    fields = {'dz', 'vr', 'sw', 'dr', 'ph', 'rh'}; 
+    fields = {'dz', 'vr', 'sw', 'dr', 'ph', 'rh'};
 else
     fields = params.fields;
 end
@@ -136,7 +136,7 @@ end
 sweeps = cell(n_fields, 1);
 available_elevs = cell(n_fields, 1);
 for f = 1:n_fields
-
+    
     available_elevs{f} = [radar.(fields{f}).sweeps.elev];
     
     if length(available_elevs{f}) == 1
@@ -175,11 +175,11 @@ output_elevs = available_elevs{f}(sweeps{f});
 
 n_sweeps = numel(requested_elevs);
 
-% Construct R and PHI, the range and azimuth coordinates of the query 
+% Construct R and PHI, the range and azimuth coordinates of the query
 % points. These are the same for each product and each sweep
-    
-switch params.coords
 
+switch params.coords
+    
     case 'polar'
         
         % Query points
@@ -210,7 +210,7 @@ switch params.coords
         x1 = y;
         x2 = x;
         x3 = output_elevs;
-                
+        
     otherwise
         error('Bad coordinate system')
 end
@@ -224,20 +224,20 @@ for f = 1:n_fields
     data{f} = nan(m, n, n_sweeps);
     for i = 1:n_sweeps
         
-        % Extract data  
+        % Extract data
         sweep_num = sweeps{f}(i);
         sweep = radar.(fields{f}).sweeps(sweep_num);
         [az, range] = get_az_range(sweep);
         vals = sweep.data;
-
+        
         % Convert from slant range to ground range
         if params.use_ground_range
             range = slant2ground(range, sweep.elev);
         end
-
+        
         % Set special non-numeric values to nan
         vals(vals >= FLAG_START) = nan;
-
+        
         % Create the interpolant
         F = radarInterpolant(vals, az, range, params.interp_method);
         

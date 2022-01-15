@@ -1,5 +1,5 @@
 function [im, minDist, x, y, X, Y, LON, LAT] = mosaic(files, lonlim, latlim, imageSize, rmax, fields, stations, max_elev, dealias)
-% MOSAIC Create a mosaic image from many rada files
+% MOSAIC Create a mosaic image from many radar files
 %
 
 if nargin < 9
@@ -48,8 +48,8 @@ pixel_size_x = x_len/pixelWidth;
 pixel_size_y = y_len/pixelHeight;
 
 % Upper bound on how big a patch to consider around each station
-patchRadius = [ 
-    ceil(1.5*rmax/1000/pixel_size_y)   % # rows 
+patchRadius = [
+    ceil(1.5*rmax/1000/pixel_size_y)   % # rows
     ceil(1.5*rmax/1000/pixel_size_x)   % # columns
     ];
 
@@ -86,14 +86,14 @@ for f=1:n
             ZMAX  = 3000;
             RMSE_THRESH = inf;
             EP_GAMMA = 0.1;
-
+            
             [ edges, ~, u, v, rmse, ~, ~, ~ ] = epvvp(radar, ZSTEP, RMIN, RMAX, ZMAX, 'EP', EP_GAMMA);
             [radar, ~] = vvp_dealias(radar, edges, u, v, rmse, RMSE_THRESH);
         end
         
         % Get coordinates of rectangular image patch centered at radar
         [I, J, inds] = getPatch(radar, imageSz, patchRadius, s);
-                
+        
         % Compute radar coordinates (distance and azimuth) for pixels in the patch
         [R, PHI] = ll2radar(radar.lon, radar.lat, LON(I,J), LAT(I,J));
         
@@ -101,17 +101,17 @@ for f=1:n
         for field_idx = 1:nFields
             
             field = fields{field_idx};
-
+            
             switch field
                 case 'dz' % use all sweeps
                     sweeps = radar.(field).sweeps;
-                case 'vr' % use only lowest 
+                case 'vr' % use only lowest
                     sweeps = radar.(field).sweeps(1);
                 otherwise
                     error('Unrecognized field');
             end
-
-            % Combine data from desired number of sweeps  
+            
+            % Combine data from desired number of sweeps
             for i=1:numel(sweeps)
                 sweep = sweeps(i);
                 
@@ -120,7 +120,7 @@ for f=1:n
                 
                 % Get interpolating function F
                 [~, ~, ~, F] = sweep2cart(sweep, rmax, dim);
-
+                
                 % Call F on radar coordinates of pixels in this patch
                 Z = F(R, PHI);
                 
@@ -132,13 +132,13 @@ for f=1:n
                     case 'dz'
                         % Keep maximum reflectivity value
                         im{field_idx}(inds) = max(im{field_idx}(inds), Z(:));
-                    
+                        
                     case 'vr'
                         % Replace pixels that are closest to this radar station than
                         % any previous one
                         K = R(:) < minDist(inds);
                         im{field_idx}(inds(K)) = Z(K);
-                    
+                        
                     otherwise
                         error('Unrecognized field')
                 end
@@ -148,10 +148,10 @@ for f=1:n
         % Update dist to closest radar station
         minDist(inds) = min(minDist(inds), R(:));
         
-     catch err
-         fprintf('Failed:\n%s\n', getReport(err));
-         continue;
-     end
+    catch err
+        fprintf('Failed:\n%s\n', getReport(err));
+        continue;
+    end
     
 end
 
@@ -167,17 +167,17 @@ minDist = flip( minDist, 1 );
 
 end
 
-function [I, J, inds] = getPatch(radar, imageSz, patchRadius, s)        
+function [I, J, inds] = getPatch(radar, imageSz, patchRadius, s)
 % GETPATCH Get coordinates of rectangular image patch centered around radar
 %
-% [I, J, inds] = getBoundingBox(radar, imageSz, patchRadius, s) 
+% [I, J, inds] = getBoundingBox(radar, imageSz, patchRadius, s)
 %
 % Inputs:
 %   radar        radar struct
 %   imageSz      image size as [w h]
 %   patchRadius  patch radius as [yRadius, xRadius]
 %   s            grid struct
-% 
+%
 % Outputs:
 %   I            list of rows
 %   J            list of columns

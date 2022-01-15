@@ -1,7 +1,7 @@
 function [ fileinfo ] = aws_list( station, year, month, day, hour )
-%AWS_LIST Get a list of archive files 
+%AWS_LIST Get a list of archive files
 %
-% [ files ] = aws_list( year, month, day, station )
+% [ files ] = aws_list( station, year, month, day, hour )
 %
 
 s3path = sprintf('%04d/%02d/%02d/%04s', ...
