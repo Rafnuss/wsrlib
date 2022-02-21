@@ -3,7 +3,6 @@ syntax:glob
 .DS_Store
 .idea
 *.pyc
-*.asv
 
 # rsl2mat build files
 rsl2mat/rsl2mat.mex*
@@ -17,3 +16,8 @@ data/mistnet.mat
 
 # Emacs backup files
 *~
+
+# Matlab
+*.asv
+*.m~
+resources/**
