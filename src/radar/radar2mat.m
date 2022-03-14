@@ -17,7 +17,7 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 %   r_res        range resolution (default: 250m)
 %   az_res       azimuth resolution (default: 0.5)
 %   dim          pixel dimension for Cartesian data (default: 500)
-%   sweeps       the sweep indices to select (default: [1, 2, 3, 4, 5])
+%   sweeps       the sweep indices to select (default: all available elevations)
 %   elevs        if set, select sweeps by elevation angle instead of
 %                number, using nearest-neighbor interpolation to match to
 %                the desired elevations
