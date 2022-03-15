@@ -9,12 +9,12 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 % Inputs:
 %   radar        radar struct (required)
 %   fields       cell array of fields to return (default: {'dz', 'vr'})
-%   r_max        max radius for polar or cartesian data in meters (default: 150000m = 150km)
+%   r_max        max radius for polar or cartesian data in meters (default: 150000)
 %
 % Named inputs
 %   coords       'polar' | 'cartesian' (default: 'polar')
 %   r_min        min radius for polar data in meters (default: 2125)
-%   r_res        range resolution (default: 250m)
+%   r_res        range resolution (default: 250)
 %   az_res       azimuth resolution (default: 0.5)
 %   dim          pixel dimension for Cartesian data (default: 500)
 %   sweeps       the sweep indices to select (default: all available elevations)
@@ -24,13 +24,12 @@ function [ data, x1, x2, x3, fields ] = radar2mat( radar, varargin )
 %   output_format  cell | struct
 %   ydirection   'xy' | 'ij'. This specifies whether the y coordinates
 %                of pixels are decreasing ('ij') or increasing ('xy')
-%                along the first dimension of the array. The default
-%                is 'xy', which makes the output compatible with
-%                griddedInterpolant.
-%   interp_method: Interpolation method for use within radarInterpolant.
-%                Default is 'nearest'.
+%                along the first dimension of the array. 'xy' is compatible 
+%                with griddedInterpolant (default: 'xy')
+%   interp_method: Interpolation method for use within radarInterpolant
+%                (default: 'nearest')
 %   max_interp_dist: Tolerance in degrees for matching requested elevation
-%                angles (defualt: 1.0)
+%                angles (default: 1.0)
 %
 % Outputs:
 %   data         struct or cell array of 3D data matrices of size m x n x p
