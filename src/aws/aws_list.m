@@ -17,6 +17,8 @@ end
 
 cmd = sprintf('/usr/local/bin/aws s3api list-objects --no-paginate --bucket noaa-nexrad-level2 --prefix %s --query ''Contents[].{Key: Key, Size: Size}'' --output json --no-sign-request | cat', s3path);
 
+% Alternative function
+% [status, result] = system('/usr/local/bin/aws s3 ls s3://noaa-nexrad-level2 --recursive --query ''Contents[].{Key: Key, Size: Size}'' --output json --no-sign-request | cat');
 
 [status, result] = system( cmd );
 if status
