@@ -406,7 +406,10 @@ switch arch
     end
 
   case {'maca64'}
-    flags.ccoptim{end+1} = '-ffast-math' ;
+    % -ffast-math implies -ffinite-math-only, under which clang folds the
+    % -Inf start of max pooling (acc_max) away: all-negative windows
+    % returned 0. Keep the other fast-math optimizations.
+    flags.ccoptim{end+1} = '-ffast-math -fno-finite-math-only' ;
 
   case {'glnxa64'}
     flags.ccoptim{end+1} = '-mssse3 -ftree-vect-loop-version -ffast-math -funroll-all-loops' ;
